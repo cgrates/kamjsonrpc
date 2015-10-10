@@ -27,10 +27,23 @@ func TestKamJsonRpcCall(t *testing.T) {
 		return
 	}
 	var reply json.RawMessage
-	if err := kamRpc.Call("uac.reg_info", []string{"l_uuid", "unknown"}, &reply); err != nil {
+	if err := kamRpc.Call("core.psx", []string{}, &reply); err != nil {
 		t.Error(err)
 	} else if reflect.DeepEqual(reply, json.RawMessage{}) {
 		t.Error("Empty reply")
+	}
+}
+
+func TestKamJsonRpcUacRegReload(t *testing.T) {
+	if !*testLocal {
+		return
+	}
+	eReply := "OK"
+	var reply string
+	if err := kamRpc.UacRegReload([]string{}, &reply); err != nil {
+		t.Error(err)
+	} else if eReply != reply {
+		t.Errorf("Expecting: %s, received: %s", eReply, reply)
 	}
 }
 

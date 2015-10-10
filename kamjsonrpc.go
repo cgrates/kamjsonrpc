@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -24,11 +25,17 @@ type KamJsonRpcRequest struct {
 	Id      uint64        `json:"id"`
 }
 
+// {"jsonrpc":"2.0","error":{"code":-32000,"message":"Execution Error"},"id":0}
+type KamError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
 type KamJsonRpcResponse struct {
 	Jsonrpc string           `json:"jsonrpc"`
 	Id      uint64           `json:"id"`
 	Result  *json.RawMessage `json:"result"`
-	Error   error            `json:"error"`
+	Error   *KamError        `json:"error"`
 }
 
 func NewKamailioJsonRpc(url string, skipTlsVerify bool) (*KamailioJsonRpc, error) {
@@ -77,7 +84,7 @@ func (self *KamailioJsonRpc) Call(serviceMethod string, args interface{}, reply 
 		return err
 	}
 	if kamResponse.Error != nil {
-		return kamResponse.Error
+		return errors.New(kamResponse.Error.Message)
 	}
 	if resp.StatusCode > 299 {
 		return fmt.Errorf("Unexpected status code received: %d", resp.StatusCode)
@@ -90,6 +97,16 @@ func (self *KamailioJsonRpc) Call(serviceMethod string, args interface{}, reply 
 }
 
 // Add inidividual methods over the generic one
+
+func (self *KamailioJsonRpc) UacRegReload(params []string, reply *string) error {
+	var regRaw json.RawMessage
+	if err := self.Call("uac.reg_reload", params, &regRaw); err != nil {
+		return err
+	}
+	*reply = "OK"
+	return nil
+}
+
 type RegistrationInfo struct {
 	LocalUuid      string `json:"l_uuid"`
 	LocalUsername  string `json:"l_username"`
