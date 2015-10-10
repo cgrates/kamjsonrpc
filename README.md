@@ -1,2 +1,5 @@
 # kamjsonrpc
-JSON-RPC client for Kamailio
+Simple JSON-RPC client for Kamailio
+
+
+See local_test file for usage.
