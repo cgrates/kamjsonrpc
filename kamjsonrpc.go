@@ -18,6 +18,10 @@ import (
 	"sync"
 )
 
+const (
+	OK = "OK"
+)
+
 type KamJsonRpcRequest struct {
 	Jsonrpc string        `json:"jsonrpc"`
 	Method  string        `json:"method"`
@@ -98,12 +102,39 @@ func (self *KamailioJsonRpc) Call(serviceMethod string, args interface{}, reply 
 
 // Add inidividual methods over the generic one
 
+func (self *KamailioJsonRpc) UacRegEnable(params []string, reply *string) error {
+	var regRaw json.RawMessage
+	if err := self.Call("uac.reg_enable", params, &regRaw); err != nil {
+		return err
+	}
+	*reply = OK
+	return nil
+}
+
+func (self *KamailioJsonRpc) UacRegDisable(params []string, reply *string) error {
+	var regRaw json.RawMessage
+	if err := self.Call("uac.reg_disable", params, &regRaw); err != nil {
+		return err
+	}
+	*reply = OK
+	return nil
+}
+
 func (self *KamailioJsonRpc) UacRegReload(params []string, reply *string) error {
 	var regRaw json.RawMessage
 	if err := self.Call("uac.reg_reload", params, &regRaw); err != nil {
 		return err
 	}
-	*reply = "OK"
+	*reply = OK
+	return nil
+}
+
+func (self *KamailioJsonRpc) UacRegRefresh(params []string, reply *string) error {
+	var regRaw json.RawMessage
+	if err := self.Call("uac.reg_refresh", params, &regRaw); err != nil {
+		return err
+	}
+	*reply = OK
 	return nil
 }
 

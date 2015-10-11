@@ -34,6 +34,32 @@ func TestKamJsonRpcCall(t *testing.T) {
 	}
 }
 
+func TestKamJsonRpcUacRegEnable(t *testing.T) {
+	if !*testLocal {
+		return
+	}
+	eReply := "OK"
+	var reply string
+	if err := kamRpc.UacRegEnable([]string{"l_uuid", "unknown"}, &reply); err != nil {
+		t.Error(err)
+	} else if eReply != reply {
+		t.Errorf("Expecting: %s, received: %s", eReply, reply)
+	}
+}
+
+func TestKamJsonRpcUacRegDisable(t *testing.T) {
+	if !*testLocal {
+		return
+	}
+	eReply := "OK"
+	var reply string
+	if err := kamRpc.UacRegDisable([]string{"l_uuid", "unknown"}, &reply); err != nil {
+		t.Error(err)
+	} else if eReply != reply {
+		t.Errorf("Expecting: %s, received: %s", eReply, reply)
+	}
+}
+
 func TestKamJsonRpcUacRegReload(t *testing.T) {
 	if !*testLocal {
 		return
@@ -41,6 +67,19 @@ func TestKamJsonRpcUacRegReload(t *testing.T) {
 	eReply := "OK"
 	var reply string
 	if err := kamRpc.UacRegReload([]string{}, &reply); err != nil {
+		t.Error(err)
+	} else if eReply != reply {
+		t.Errorf("Expecting: %s, received: %s", eReply, reply)
+	}
+}
+
+func TestKamJsonRpcUacRegRefresh(t *testing.T) {
+	if !*testLocal {
+		return
+	}
+	eReply := "OK"
+	var reply string
+	if err := kamRpc.UacRegRefresh([]string{"l_uuid", "unknown"}, &reply); err != nil {
 		t.Error(err)
 	} else if eReply != reply {
 		t.Errorf("Expecting: %s, received: %s", eReply, reply)
