@@ -102,6 +102,14 @@ func (self *KamailioJsonRpc) Call(serviceMethod string, args interface{}, reply 
 
 // Add inidividual methods over the generic one
 
+func (self *KamailioJsonRpc) CoreEcho(params []string, reply *[]string) error {
+        var rplRaw json.RawMessage
+        if err := self.Call("core.echo", params, &rplRaw); err != nil {
+                return err
+        }
+        return json.Unmarshal(rplRaw, reply)
+} 
+
 func (self *KamailioJsonRpc) UacRegEnable(params []string, reply *string) error {
 	var regRaw json.RawMessage
 	if err := self.Call("uac.reg_enable", params, &regRaw); err != nil {

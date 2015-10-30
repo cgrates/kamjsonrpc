@@ -34,6 +34,20 @@ func TestKamJsonRpcCall(t *testing.T) {
 	}
 }
 
+func TestKamJsonRpcCoreEcho(t *testing.T) {
+        if !*testLocal {
+                return
+        }
+        req := []string{"test_kamjsonrpc"}
+        var reply []string
+        if err := kamRpc.CoreEcho(req, &reply); err != nil {
+                t.Error(err)
+        } else if !reflect.DeepEqual(req, reply) {
+                t.Errorf("Expecting: %+v, received: %+v", req, reply)
+        }
+}
+
+
 func TestKamJsonRpcUacRegEnable(t *testing.T) {
 	if !*testLocal {
 		return
